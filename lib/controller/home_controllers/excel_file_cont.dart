@@ -1,12 +1,10 @@
-import 'dart:convert';
+
 import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:path/path.dart';
 import 'dart:async' show Future;
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -359,8 +357,10 @@ class ExcelFileController extends GetxController {
     return false;
   }
 
-  void toFilesScreen() {
+  Future<void> toFilesScreen() async {
     FilesController filesController = Get.find();
+
+    await filesController.filesPathListAdd();
     filesController.searchMode = false;
     filesController.searchController.clear();
     filesController.update();

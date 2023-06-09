@@ -11,7 +11,7 @@ class AssetsFiles {
     FileModel(
       path: 'assets/files/file2-2023.csv',
       dateEnd: DateTime(2024, 5, 1).difference(DateTime.now()).inDays,
-      teacher_code: '1',
+      teacher_code: '2',
       name: 'file2-2023',
     ),
     FileModel(

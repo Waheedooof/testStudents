@@ -8,7 +8,6 @@ import 'package:testmaker_student/core/constant/assetsFiles.dart';
 import '../../controller/home_controllers/exam_cont.dart';
 import '../../controller/home_controllers/excel_file_cont.dart';
 import '../../controller/home_controllers/files_contoller.dart';
-import '../../core/constant/approutes.dart';
 import '../../core/theme/themes.dart';
 import '../widget/appbar.dart';
 
@@ -72,18 +71,9 @@ class FilesPage extends StatelessWidget {
       // },
       onTap: () async {
         if (filesController.deleteIndexFiles.isEmpty) {
-          // await filesController.login(AssetsFiles.assetsFiles[index],'121212');
           filesController.toPasswordPage(AssetsFiles.assetsFiles[index]);
-          Get.toNamed(AppRoute.passwordPage);
-          // if(await filesController.login()){
-          //   excelFileController.pickFile(
-              print(getPathFromFile(filesController.files[index]));
-          //   );
-          //   examController.reset();
-          //   Get.back();
-          //   Get.back();
-          // }
 
+          print(getPathFromFile(filesController.files[index]));
         } else {
           filesController.selectedFiles(index);
         }
@@ -131,13 +121,19 @@ class FilesPage extends StatelessWidget {
               ),
               AnimatedContainer(
                 duration: const Duration(milliseconds: 800),
-                margin: filesController.deleteIndexFiles.contains(index)
+                margin: filesController.accessAbleFilesPathList
+                        .contains(AssetsFiles.assetsFiles[index].path)
                     ? const EdgeInsets.symmetric(horizontal: 8)
                     : const EdgeInsets.symmetric(horizontal: 0),
-                child: filesController.deleteIndexFiles.contains(index)
+                child:  filesController.accessAbleFilesPathList
+                    .contains(AssetsFiles.assetsFiles[index].path)
                     ? CircleAvatar(
                         radius: 10,
-                        backgroundColor: Get.theme.primaryColor,
+                        backgroundColor: Colors.green,
+                        child: Icon(
+                          Icons.done,size: 12,
+                          color: Get.theme.scaffoldBackgroundColor,
+                        ),
                       )
                     : Container(),
               )

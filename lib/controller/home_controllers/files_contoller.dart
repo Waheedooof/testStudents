@@ -23,22 +23,53 @@ class FilesController extends GetxController {
   List<int> deleteIndexFiles = [];
 
   TextEditingController searchController = TextEditingController();
+  MyServices myServices = Get.find();
 
   bool showFilesList = false;
   bool searchMode = false;
 
-  late FileModel fileToOpen ;
+  late FileModel fileToOpen;
 
-  toPasswordPage(FileModel fileModel){
+  toPasswordPage(FileModel fileModel) {
     fileToOpen = fileModel;
     Get.toNamed(AppRoute.passwordPage);
-
   }
-  @override
-  void onInit() {
-    getListFiles();
 
+  @override
+  Future<void> onInit() async {
+      getListFiles();
     super.onInit();
+  }
+
+  List<String> accessAbleFilesPathList = [];
+
+  filesPathListAdd() async {
+    for (FileSystemEntity file in files) {
+      if (await isFileOpenedAndLater(file.path)) {
+        accessAbleFilesPathList.add(file.path);
+      }
+    }
+    update();
+    print('accessAbleFilesPathList');
+    print(accessAbleFilesPathList.length);
+  }
+
+  Future<bool> isFileOpenedAndLater(String fileCreatePath) async {
+    print('isFileOpenedAndLater');
+    if (myServices.sharedPreferences.containsKey(fileCreatePath)) {
+      int storedYear =
+          int.parse(myServices.sharedPreferences.getString(fileCreatePath)!);
+      int nowYear = DateTime.now().year;
+      print('fileCreatePath ${nowYear - storedYear}');
+      if ((nowYear - storedYear) <= 2) {
+        return true;
+      } else {
+        myServices.sharedPreferences.remove(fileCreatePath);
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 
   changeShowList() {
@@ -129,7 +160,14 @@ class FilesController extends GetxController {
     update();
   }
 
-
-
-
+  void openFilePath(FileModel fileToOpen) {
+    ExcelFileController excelFileController = Get.find();
+    ExamController examController = Get.find();
+    excelFileController.pickFile(
+      fileToOpen.path,
+    );
+    examController.reset();
+    Get.back();
+    Get.back();
+  }
 }

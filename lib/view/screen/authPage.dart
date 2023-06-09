@@ -74,14 +74,7 @@ class PasswordPage extends StatelessWidget {
                   onPressed: () async {
                     if (await authController
                         .login(filesController.fileToOpen)) {
-                      ExcelFileController excelFileController = Get.find();
-                      ExamController examController = Get.find();
-                      excelFileController.pickFile(
-                        filesController.fileToOpen.path,
-                      );
-                      examController.reset();
-                      Get.back();
-                      Get.back();
+                      filesController.openFilePath(filesController.fileToOpen);
                     }
                   },
                   child: Container(
