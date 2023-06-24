@@ -26,5 +26,11 @@ class AssetsFiles {
       teacher_code: '2',
       name: 'جغرافيا 1-2023',
     ),
+    FileModel(
+      path: 'assets/files/test-2023 (5).csv',
+      dateEnd: DateTime(2023, 6, 25).difference(DateTime.now()).inDays,
+      teacher_code: '2',
+      name: 'test-2023 (5)',
+    ),
   ];
 }

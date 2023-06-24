@@ -1,11 +1,15 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:testmaker_student/controller/home_controllers/exam_cont.dart';
 import 'package:testmaker_student/controller/home_controllers/excel_file_cont.dart';
+import 'package:testmaker_student/core/class/handelingview.dart';
 import 'package:testmaker_student/core/constant/approutes.dart';
 import '../../../core/theme/app_dimentions.dart';
+import '../imageViewer.dart';
 
 class QuestionCard extends StatelessWidget {
   QuestionCard({super.key, required this.questionColumnIndex});
@@ -66,7 +70,6 @@ class QuestionCard extends StatelessWidget {
         //   editRowIndex: questionColumnIndex,
         // );
         Get.toNamed(AppRoute.favoritePage);
-
       },
       onLongPress: () {
         Get.toNamed(AppRoute.favoritePage);
@@ -111,6 +114,86 @@ class QuestionCard extends StatelessWidget {
       },
       icon: const Icon(CupertinoIcons.info),
     );
+  }
+
+  String getCsvTablePath(questionColumnIndex) {
+    for (var element in excelController.csvTable[questionColumnIndex]) {
+      if (element.toString().contains('http')) {
+        return element.toString();
+      }
+    }
+    return '';
+  }
+
+  bool containPath(questionColumnIndex) {
+    if (excelController.csvTable[questionColumnIndex]
+        .toString()
+        .contains('http')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  imageWidget() {
+    if (!containPath(questionColumnIndex)) {
+      return Container();
+    } else {
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 11.0),
+        child: InkWell(
+          onTap: () {
+            Get.to(
+              () => ImageViewer(
+                imagePath: getCsvTablePath(questionColumnIndex),
+              ),
+            );
+          },
+          child: Container(
+            width: Get.width,
+            height: Get.height/4,
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                  color: Get.theme.primaryColor.withOpacity(0.3),
+                  blurRadius: 8,
+                  spreadRadius: 2,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+              borderRadius: BorderRadius.all(
+                Radius.circular(AppDims.corners),
+              ),
+            ),
+            child: Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(
+                  Radius.circular(AppDims.corners),
+                ),
+                child: PhotoView(
+                  initialScale: PhotoViewComputedScale.contained,
+                  customSize: Size(
+                    Get.width,
+                    Get.width / 2,
+                  ),
+                  backgroundDecoration: BoxDecoration(
+                    color: Get.theme.highlightColor.withOpacity(0.2),
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(AppDims.corners),
+                    ),
+                  ),
+                  imageProvider: CachedNetworkImageProvider(
+                    getCsvTablePath(questionColumnIndex),
+                  ),
+                  minScale: PhotoViewComputedScale.contained * 0.8,
+                  maxScale: PhotoViewComputedScale.covered * 2.0,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
   }
 
   Widget questionWidget() {
@@ -180,10 +263,10 @@ class QuestionCard extends StatelessWidget {
 
           if (!answers.contains(indexInRow) ||
               excelController.csvTable[questionColumnIndex][indexInRow]
-                  .toString() ==
+                      .toString() ==
                   '') {
             return Container();
-          }  else {
+          } else {
             return InkWell(
               onTap: () {
                 examController.chooseAnswerIndex(
@@ -226,7 +309,9 @@ class QuestionCard extends StatelessWidget {
             Radius.circular(AppDims.corners),
           ),
         ),
-        color: excelController.readMode?getCorrectAnswersColor(indexInRow): getAnswersColor(indexInRow),
+        color: excelController.readMode
+            ? getCorrectAnswersColor(indexInRow)
+            : getAnswersColor(indexInRow),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
           child: Text(
@@ -382,6 +467,7 @@ class QuestionCard extends StatelessWidget {
                       const EdgeInsets.symmetric(horizontal: 5.0, vertical: 4),
                   child: Column(
                     children: [
+                      imageWidget(),
                       questionWidget(),
                       answersWidget(),
                       Row(

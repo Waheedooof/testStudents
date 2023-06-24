@@ -205,14 +205,14 @@ class HomePage extends StatelessWidget {
         if (excelFileController.searchQuestionsMode) {
           excelFileController.changeSearchQuestions();
         } else {
-          Get.toNamed(AppRoute.addQuesPage);
+          // Get.toNamed(AppRoute.addQuesPage);
         }
       } else if (details.primaryVelocity! < 0 &&
           Get.locale?.languageCode == 'en') {
         if (excelFileController.searchQuestionsMode) {
           excelFileController.changeSearchQuestions();
         } else {
-          Get.toNamed(AppRoute.addQuesPage);
+          // Get.toNamed(AppRoute.addQuesPage);
         }
       } else if (details.primaryVelocity! < 0 &&
               Get.locale?.languageCode == 'ar' ||

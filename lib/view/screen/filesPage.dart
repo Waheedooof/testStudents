@@ -50,8 +50,10 @@ class FilesPage extends StatelessWidget {
                     getPathFromFile(
                       filesBuilderController.files[index],
                     ).split('/').last,
-                  ).isCaseInsensitiveContainsAny(
-                      filesBuilderController.searchController.text)) {
+                  ).removeAllWhitespace.isCaseInsensitiveContainsAny(
+                        filesBuilderController
+                            .searchController.text.removeAllWhitespace,
+                      )) {
                     return fileWidget(index);
                   } else {
                     return Container();
@@ -125,13 +127,14 @@ class FilesPage extends StatelessWidget {
                         .contains(AssetsFiles.assetsFiles[index].path)
                     ? const EdgeInsets.symmetric(horizontal: 8)
                     : const EdgeInsets.symmetric(horizontal: 0),
-                child:  filesController.accessAbleFilesPathList
-                    .contains(AssetsFiles.assetsFiles[index].path)
+                child: filesController.accessAbleFilesPathList
+                        .contains(AssetsFiles.assetsFiles[index].path)
                     ? CircleAvatar(
                         radius: 10,
                         backgroundColor: Colors.green,
                         child: Icon(
-                          Icons.done,size: 12,
+                          Icons.done,
+                          size: 12,
                           color: Get.theme.scaffoldBackgroundColor,
                         ),
                       )

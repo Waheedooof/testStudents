@@ -70,6 +70,7 @@
   "theme": "Night Mode",
   "network_error": "NetWork Error",
   "auth_error": "Code Error",
+  "image_view": "image viewer",
   "themeLight": "Light Mode",
   "NotEditAble": "Your Edit On This File Will Not Applied When You Share It",
   "EditAble": "Your Edit will be applied to this file When You Share It",
