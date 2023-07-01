@@ -1,19 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:testmaker_student/core/constant/approutes.dart';
 import 'package:testmaker_student/core/constant/assetsFiles.dart';
 import 'package:testmaker_student/data/model/filrModel.dart';
-import 'dart:io' as io;
-
-import '../../core/class/statusrequest.dart';
-import '../../core/function/handlingdata.dart';
 import '../../core/services/services.dart';
-import '../../data/datasource/remote/home/login.dart';
 import 'exam_cont.dart';
 import 'excel_file_cont.dart';
 
@@ -37,16 +29,31 @@ class FilesController extends GetxController {
 
   @override
   Future<void> onInit() async {
-      getListFiles();
+    getListFiles();
+    filesPathListAdd();
     super.onInit();
+  }
+
+  setFileOpened(String fileCreatePath) {
+    myServices.sharedPreferences
+        .setString(fileCreatePath, DateTime.now().year.toString());
   }
 
   List<String> accessAbleFilesPathList = [];
 
   filesPathListAdd() async {
+    accessAbleFilesPathList.clear();
     for (FileSystemEntity file in files) {
       if (await isFileOpenedAndLater(file.path)) {
         accessAbleFilesPathList.add(file.path);
+      }
+    }
+
+    for (FileModel element in AssetsFiles.assetsFiles) {
+      if (element.teacherCode == '0') {
+        accessAbleFilesPathList.remove(element.path);
+        accessAbleFilesPathList.add(element.path);
+        setFileOpened(element.path);
       }
     }
     update();
@@ -79,7 +86,7 @@ class FilesController extends GetxController {
 
   void getListFiles() async {
     files.clear();
-    for (var element in AssetsFiles.assetsFiles) {
+    for (FileModel element in AssetsFiles.assetsFiles) {
       files.add(File(element.path));
     }
     print(files.length);

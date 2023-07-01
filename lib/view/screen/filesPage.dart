@@ -73,9 +73,11 @@ class FilesPage extends StatelessWidget {
       // },
       onTap: () async {
         if (filesController.deleteIndexFiles.isEmpty) {
+          print(getPathFromFile(filesController.files[index]));
+          print(filesController.files[index].path);
+          print('=====================================');
           filesController.toPasswordPage(AssetsFiles.assetsFiles[index]);
 
-          print(getPathFromFile(filesController.files[index]));
         } else {
           filesController.selectedFiles(index);
         }

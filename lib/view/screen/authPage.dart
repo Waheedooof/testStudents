@@ -1,9 +1,8 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:testmaker_student/controller/auth_controller.dart';
-import 'package:testmaker_student/controller/home_controllers/exam_cont.dart';
-import 'package:testmaker_student/controller/home_controllers/excel_file_cont.dart';
 import 'package:testmaker_student/controller/home_controllers/files_contoller.dart';
 import 'package:testmaker_student/core/class/handelingview.dart';
 import 'package:testmaker_student/view/widget/appbar.dart';
@@ -35,6 +34,7 @@ class PasswordPage extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 21,
                         color: Get.theme.primaryColor,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(
@@ -54,7 +54,10 @@ class PasswordPage extends StatelessWidget {
                 type: tr('password'),
                 iconData: Icons.password,
                 inputType: TextInputType.visiblePassword,
-                onChanged: (p0) {},
+                onChanged: (p0) {
+                  authController.update();
+                  return null;
+                },
                 validator: (p0) {
                   return null;
                 },
@@ -68,22 +71,35 @@ class PasswordPage extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              HandelingRequest(
-                statusRequest: authController.statusRequest!,
-                widget: ElevatedButton(
-                  onPressed: () async {
-                    if (await authController
-                        .login(filesController.fileToOpen)) {
-                      filesController.openFilePath(filesController.fileToOpen);
-                    }
-                  },
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
-                    child: const Text('ok').tr(),
-                  ),
-                ),
-              ),
+              authController.passwordController.text.isEmpty
+                  ? IconButton(
+                      onPressed: () async {
+                        await authController.scan(context);
+                      },
+                      icon: Icon(
+                        CupertinoIcons.barcode_viewfinder,
+                        size: 100,
+                        color: Get.theme.primaryColor,
+                      ),
+                    )
+                  : HandelingRequest(
+                      statusRequest: authController.statusRequest!,
+                      widget: ElevatedButton(
+                        onPressed: () async {
+                          // await authController.scan(context);
+                          if (await authController
+                              .login(filesController.fileToOpen)) {
+                            filesController
+                                .openFilePath(filesController.fileToOpen);
+                          }
+                        },
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: const Text('ok').tr(),
+                        ),
+                      ),
+                    ),
             ],
           ));
         }),

@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:testmaker_student/controller/home_controllers/exam_cont.dart';
 import 'package:testmaker_student/controller/home_controllers/excel_file_cont.dart';
-import 'package:testmaker_student/core/class/handelingview.dart';
 import 'package:testmaker_student/core/constant/approutes.dart';
 import '../../../core/theme/app_dimentions.dart';
 import '../imageViewer.dart';
@@ -74,7 +73,9 @@ class QuestionCard extends StatelessWidget {
       onLongPress: () {
         Get.toNamed(AppRoute.favoritePage);
       },
-      child: excelController.csvTable[questionColumnIndex].length == 8
+      child: excelController.csvTable[questionColumnIndex]
+              .toString()
+              .contains('like') //length==8
           ? const Padding(
               padding: EdgeInsets.all(3.0),
               child: Icon(
@@ -90,21 +91,32 @@ class QuestionCard extends StatelessWidget {
   }
 
   Widget sureBtn() {
-    return questionColumnIndex == examController.choose1.keys.first
-        ? IconButton(
-            onPressed: () {
-              examController.add(questionColumnIndex);
-            },
-            icon: const Icon(
-              Icons.done_outline_outlined,
-            ),
-          )
-        : IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.done_outline_outlined,
-            ),
-          );
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      height: questionColumnIndex == examController.choose1.keys.first
+          ? Get.height / 18
+          : Get.height / 30,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          width: 1,
+          color: questionColumnIndex == examController.choose1.keys.first
+              ? Colors.greenAccent
+              : Colors.transparent,
+        ),
+      ),
+      child: questionColumnIndex == examController.choose1.keys.first
+          ? IconButton(
+              onPressed: () {
+                examController.add(questionColumnIndex);
+              },
+              icon: Icon(
+                Icons.done_outline_outlined,
+                color: Get.theme.scaffoldBackgroundColor,
+              ),
+            )
+          : Container(),
+    );
   }
 
   infoWidget() {
@@ -151,7 +163,7 @@ class QuestionCard extends StatelessWidget {
           },
           child: Container(
             width: Get.width,
-            height: Get.height/4,
+            height: Get.height / 4,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(

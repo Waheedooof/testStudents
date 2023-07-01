@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET"/> <!-- Add this -->
 
     <application
-        android:label="testmaker_student"
+        android:label="فحص"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

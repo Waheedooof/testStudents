@@ -96,7 +96,6 @@ class ExcelFileController extends GetxController {
       data = '';
       fileTitle = filePath;
       update();
-      File file = File(filePath);
       // data = file.readAsStringSync();
       print('===0000000==getFileData $filePath==========');
       data = await rootBundle.loadString(filePath);

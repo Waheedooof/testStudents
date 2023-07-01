@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog.dart';
 import 'package:testmaker_student/core/function/checkinternet.dart';
 import 'package:testmaker_student/core/services/services.dart';
 import 'package:testmaker_student/data/model/filrModel.dart';
@@ -41,6 +41,21 @@ class AuthController extends GetxController {
         .setString(fileCreatePath, DateTime.now().year.toString());
   }
 
+  Future<void> scan(BuildContext context) async {
+    try {
+      QrBarCodeScannerDialog().getScannedQrBarCode(
+          context: context,
+          onCode: (code) async {
+            print(code);
+            passwordController.text = code!;
+            if (await login(filesController.fileToOpen)) {
+              filesController.openFilePath(filesController.fileToOpen);
+            }
+          });
+    } catch (e) {
+      // Handle any scanning errors
+    }
+  }
   Future<bool> login(FileModel assetsFile) async {
     if (await filesController.isFileOpenedAndLater(assetsFile.path)) {
       return true;
@@ -53,7 +68,7 @@ class AuthController extends GetxController {
           var response = await loginData.loginData(
             getCreate: DateTime.now().toString(),
             password: passwordController.text,
-            teacherCode: assetsFile.teacher_code,
+            teacherCode: assetsFile.teacherCode,
             // fileCreate: '0',
           );
           print('${assetsFile.name}\n $response');

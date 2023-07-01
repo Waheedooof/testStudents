@@ -3,14 +3,14 @@ class FileModel {
 
   final String name;
 
-  final String teacher_code;
+  final String teacherCode;
 
   final int dateEnd;
 
   FileModel({
     required this.path,
     required this.dateEnd,
-    required this.teacher_code,
+    required this.teacherCode,
     required this.name,
   });
 }

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +23,7 @@ class DrawerWidget extends StatelessWidget {
     ExamController examController = Get.find();
 
     String getPathFromFile(fil) {
-      return fil.toString().split('\'')[1];
+      return fil.toString().split('\'').last;
     }
 
     String getFirstName(String last) {
@@ -309,16 +308,18 @@ class DrawerWidget extends StatelessWidget {
               : ListView.builder(
                   shrinkWrap: true,
                   primary: false,
-                  itemCount: fileController.files.length,
+                  itemCount: fileController.accessAbleFilesPathList.length,
                   itemBuilder: (context, i) {
-                    int index = fileController.files.length - i - 1;
+                    int index =
+                        fileController.accessAbleFilesPathList.length - i - 1;
                     return InkWell(
                       onLongPress: () {
                         deleteSnackBar(fileController, index);
                       },
                       onTap: () {
                         excelFileController.pickFile(
-                          getPathFromFile(fileController.files[index]),
+                          getPathFromFile(
+                              fileController.accessAbleFilesPathList[index]),
                         );
                         examController.reset();
                       },
@@ -326,7 +327,8 @@ class DrawerWidget extends StatelessWidget {
                         margin: const EdgeInsets.symmetric(horizontal: 4),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: getPathFromFile(fileController.files[index]) ==
+                          color: getPathFromFile(fileController
+                                      .accessAbleFilesPathList[index]) ==
                                   excelFileController.fileTitle
                               ? context.theme.primaryColor.withOpacity(0.8)
                               : null,
@@ -336,7 +338,8 @@ class DrawerWidget extends StatelessWidget {
                           child: Row(
                             children: [
                               Text(
-                                (fileController.files.length - index)
+                                (fileController.accessAbleFilesPathList.length -
+                                        index)
                                     .toString(),
                                 style: TextStyle(
                                   color: context.theme.highlightColor,
@@ -345,12 +348,13 @@ class DrawerWidget extends StatelessWidget {
                               Expanded(child: Container()),
                               Text(
                                 getFirstName(getPathFromFile(
-                                  fileController.files[index],
+                                  fileController.accessAbleFilesPathList[index],
                                 ).split('/').last),
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  color: getPathFromFile(
-                                              fileController.files[index]) ==
+                                  color: getPathFromFile(fileController
+                                                  .accessAbleFilesPathList[
+                                              index]) ==
                                           excelFileController.fileTitle
                                       ? context.theme.scaffoldBackgroundColor
                                       : context.theme.highlightColor,
